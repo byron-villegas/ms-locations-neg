@@ -1,7 +1,7 @@
 {
-  "name": "ms-monsterhunter-neg",
+  "name": "ms-locations-neg",
   "version": "1.0.0",
-  "description": "Microservice for consume services of Monster Hunter API",
+  "description": "Microservice for location management",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
