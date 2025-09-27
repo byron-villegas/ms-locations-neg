@@ -3,16 +3,25 @@ class LocationRepository {
         this.mongoDBClient = mongoDBClient;
     }
 
-    async save(location) {
-        console.info(`${new Date().toISOString()} [LocationRepository] [save] [START] Save [${JSON.stringify(location)}]`);
-        await this.mongoDBClient.save(location);
-        console.info(`${new Date().toISOString()} [LocationRepository] [save] [END] Save`);
+    async save(req, location) {
+        console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationRepository] [save] [START] Save [${JSON.stringify(location)}]`);
+
+        const collection = await this.mongoDBClient.getCollection('locations');
+
+        await collection.insertOne(location);
+
+        console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationRepository] [save] [END] Save`);
     }
 
-    async findAll() {
-        console.info(`${new Date().toISOString()} [LocationRepository] [findAll] [START] Find All`);
-        const locations = await this.mongoDBClient.findAll();
-        console.info(`${new Date().toISOString()} [LocationRepository] [findAll] [END] Find All [${locations.length}]`);
+    async findAll(req) {
+        console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationRepository] [findAll] [START] Find All`);
+
+        const collection = await this.mongoDBClient.getCollection('locations');
+
+        const locations = await collection.find({}).toArray();
+
+        console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationRepository] [findAll] [END] Find All [${locations.length}]`);
+
         return locations;
     }
 }

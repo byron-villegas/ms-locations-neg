@@ -1,6 +1,3 @@
-const constants = require('../constants/constants');
-const config = require('../configs/config');
-
 class LocationService {
   constructor(locationRepository, locationMapper, cache) {
     this.locationRepository = locationRepository;
@@ -8,19 +5,21 @@ class LocationService {
     this.cache = cache;
   }
 
-  async save(locationDTO) {
-    console.info(`${new Date().toISOString()} [LocationService] [save] [START] Save [${JSON.stringify(locationDTO)}]`);
-    // Implementation to save locationDTO
+  async save(req, location) {
+    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [save] [START] Save [${JSON.stringify(location)}]`);
 
-    await this.locationRepository.save(locationDTO);
+    await this.locationRepository.save(req,location);
 
-    console.info(`${new Date().toISOString()} [LocationService] [save] [END] Save`);
+    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [save] [END] Save`);
   }
 
-  async findAll() {
-    console.info(`${new Date().toISOString()} [LocationService] [findAll] [START] Find All`);
-    const locations = await this.locationRepository.findAll();
-    console.info(`${new Date().toISOString()} [LocationService] [findAll] [END] Find All [${locations.length}]`);
+  async findAll(req) {
+    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [START] Find All`);
+
+    const locations = await this.locationRepository.findAll(req);
+
+    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [END] Find All [${locations.length}]`);
+
     return locations;
   }
 }
