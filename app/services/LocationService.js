@@ -1,3 +1,5 @@
+const Cache = require('../cache/Cache');
+
 class LocationService {
   constructor(locationRepository, locationMapper, cache) {
     this.locationRepository = locationRepository;
@@ -16,7 +18,16 @@ class LocationService {
   async findAll(req) {
     console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [START] Find All`);
 
+    const cachedLocations = this.cache.get('locations');
+
+    if (cachedLocations) {
+      console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [END] Find All from Cache [${cachedLocations.length}]`);
+      return cachedLocations;
+    }
+
     const locations = await this.locationRepository.findAll(req);
+
+    this.cache.set('locations', locations);
 
     console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [END] Find All [${locations.length}]`);
 
