@@ -22,18 +22,19 @@ server.use(errorMiddleware);
 
 module.exports = async function startServer() {
     try {
-        console.log('Connecting to MongoDB at startup...');
-        
+        console.log('\x1b[36mConnecting to MongoDB at startup...\x1b[0m');
+
         await mongoClient.connect();
-        
-        console.info('MongoDB connected successfully at startup');
+
+        console.info('\x1b[32mMongoDB connected successfully at startup\x1b[0m');
 
         // Arranca el servidor solo después de conectar a MongoDB
         server.listen(config.server.port, () => {
-            console.log(`Server is listening on http://localhost:${config.server.port}${config.server.context}`);
+            console.log(`Server is listening on \x1b[32mhttp://localhost:${config.server.port}${config.server.context}\x1b[0m`);
         });
     } catch (err) {
-        console.error('Failed to connect to MongoDB at startup:', err);
+        console.error('\x1b[31mFailed to start server:\x1b[0m', err);
+
         process.exit(1);
     }
 };

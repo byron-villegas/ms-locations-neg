@@ -1,6 +1,8 @@
 const config = require('../configs/config');
 const { MongoClient } = require('mongodb');
 
+const LogUtil = require('../utils/LogUtil');
+
 class MongoDBClient {
     constructor() {
         this.client = null;
@@ -10,10 +12,10 @@ class MongoDBClient {
     }
 
     async connect() {
-        console.info(`${new Date().toISOString()} [MongoDBClient] [connect] [START] Connecting to MongoDB...`);
+        LogUtil.info(`[MongoDBClient] [connect] [START] Connecting to MongoDB...`);
 
         if (this.client && this.client.topology && this.client.topology.isConnected()) {
-            console.info(`${new Date().toISOString()} [MongoDBClient] [connect] MongoDB is already connected`);
+            LogUtil.info(`[MongoDBClient] [connect] MongoDB is already connected`);
             return;
         }
 
@@ -30,17 +32,17 @@ class MongoDBClient {
             // Listen for close/error events to reset connection
             this.client.on('close', () => {
                 this.client = null;
-                console.warn(`${new Date().toISOString()} [MongoDBClient] [connect] MongoDB connection closed`);
+                LogUtil.warn(`[MongoDBClient] [connect] MongoDB connection closed`);
             });
 
             this.client.on('error', (err) => {
                 this.client = null;
-                console.error(`${new Date().toISOString()} [MongoDBClient] [connect] [ERROR] Failed to connect to MongoDB:`, err);
+                LogUtil.error(`[MongoDBClient] [connect] [ERROR] Failed to connect to MongoDB:`, err);
             });
 
-            console.info(`${new Date().toISOString()} [MongoDBClient] [connect] [END] Connected to MongoDB`);
+            LogUtil.info(`[MongoDBClient] [connect] [END] Connected to MongoDB`);
         } catch (error) {
-            console.error(`${new Date().toISOString()} [MongoDBClient] [connect] [ERROR] Failed to connect to MongoDB:`, error);
+            LogUtil.error(`[MongoDBClient] [connect] [ERROR] Failed to connect to MongoDB:`, error);
             throw error;
         } finally {
             this.isConnecting = false;
@@ -65,14 +67,14 @@ class MongoDBClient {
     }
 
     async close() {
-        console.info(`${new Date().toISOString()} [MongoDBClient] [close] [START] Closing MongoDB connection...`);
+        LogUtil.info(`[MongoDBClient] [close] [START] Closing MongoDB connection...`);
 
         if (this.client) {
             await this.client.close();
             this.client = null;
         }
 
-        console.info(`${new Date().toISOString()} [MongoDBClient] [close] [END] MongoDB connection closed`);
+        LogUtil.info(`[MongoDBClient] [close] [END] MongoDB connection closed`);
     }
 
     async getCollection(name) {

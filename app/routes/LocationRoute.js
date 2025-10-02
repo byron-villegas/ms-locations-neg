@@ -1,5 +1,5 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
 
 const LocationRepository = require('../repositories/LocationRepository');
 const LocationService = require('../services/LocationService');
@@ -27,7 +27,10 @@ module.exports = (mongoClient) => {
         ],
         (req, res, next) => locationController.save(req, res, next)
     );
+    
     router.get('/', (req, res, next) => locationController.findAll(req, res, next));
+
+    router.get('/:id', [param('id').notEmpty().withMessage('id is required'), param('id').isNumeric().withMessage('id must be a number')], (req, res, next) => locationController.findById(req, res, next));
 
     return router;
 };

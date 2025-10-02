@@ -3,6 +3,7 @@ class ServerError extends Error {
     super(mensaje);
     this.codigo = codigo;
     this.mensaje = mensaje;
+    this.name = 'ServerError';
   }
 }
 

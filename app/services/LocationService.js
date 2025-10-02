@@ -1,4 +1,5 @@
-const Cache = require('../cache/Cache');
+const namespace = require('../utils/requestContext');
+const LogUtil = require('../utils/LogUtil');
 
 class LocationService {
   constructor(locationRepository, locationMapper, cache) {
@@ -7,29 +8,29 @@ class LocationService {
     this.cache = cache;
   }
 
-  async save(req, location) {
-    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [save] [START] Save [${JSON.stringify(location)}]`);
+  async save(location) {
+    LogUtil.info(`[LocationService] [save] [START] Save [${JSON.stringify(location)}]`);
 
-    await this.locationRepository.save(req,location);
+    await this.locationRepository.save(location);
 
-    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [save] [END] Save`);
+    LogUtil.info(`[LocationService] [save] [END] Save`);
   }
 
-  async findAll(req) {
-    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [START] Find All`);
+  async findAll() {
+    LogUtil.info(`[LocationService] [findAll] [START] Find All`);
 
     const cachedLocations = this.cache.get('locations');
 
     if (cachedLocations) {
-      console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [END] Find All from Cache [${cachedLocations.length}]`);
+      LogUtil.info(`[LocationService] [findAll] [END] Find All from Cache [${cachedLocations.length}]`);
       return cachedLocations;
     }
 
-    const locations = await this.locationRepository.findAll(req);
+    const locations = await this.locationRepository.findAll();
 
     this.cache.set('locations', locations);
 
-    console.info(`${new Date().toISOString()} [${req.trackingId}] [LocationService] [findAll] [END] Find All [${locations.length}]`);
+    LogUtil.info(`[LocationService] [findAll] [END] Find All [${locations.length}]`);
 
     return locations;
   }

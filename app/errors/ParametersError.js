@@ -2,6 +2,7 @@ class ParametersError extends Error {
   constructor(campo = '', mensaje = '') {
     super('Parametros invalidos');
     this.detalles = [{ campo, mensaje }];
+    this.name = 'ParametersError';
   }
 
   static fromDetalles(detalles = []) {
